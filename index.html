@@ -1,101 +1,80 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ИСКРА</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.cdnfonts.com/css/gebuk" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0a0a0b" />
+  <title>ИСКРА</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
 </head>
 <body>
-    <div class="main-container">
-        <header class="header">
-            <h1 class="header-logo">ИСКРА</h1>
-            <button class="clear-btn" id="clearBtn" title="Очистить историю">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
-                </svg>
-            </button>
-        </header>
+  <div id="app" class="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-top">
+        <div class="brand">
+          <svg class="spark" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
+            <path d="M16 1.5 18.35 13.65 30.5 16 18.35 18.35 16 30.5 13.65 18.35 1.5 16 13.65 13.65Z" />
+          </svg>
+          <span>ИСКРА</span>
+        </div>
+        <button type="button" class="btn-icon" id="btnNew" title="Новый чат">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+      </div>
+      <div class="chat-list" id="chatList"></div>
+    </aside>
 
-        <main class="home-page" id="homePage">
-            <div class="home-bg-image"></div>
-            <div class="home-content">
-                <h1 class="home-logo">ИСКРА</h1>
-                <p class="home-subtitle">Ваш умный AI-ассистент</p>
-                <div class="suggestions-container">
-                    <div class="suggestions-scroll" id="suggestionsScroll">
-                        <button class="suggestion-card" data-prompt="Объясни квантовую физику простыми словами">
-                            <span class="suggestion-icon">🔬</span>
-                            <span class="suggestion-text">Объясни квантовую физику простыми словами</span>
-                        </button>
-                        <button class="suggestion-card" data-prompt="Напиши код для сортировки массива на Python">
-                            <span class="suggestion-icon">💻</span>
-                            <span class="suggestion-text">Напиши код для сортировки массива на Python</span>
-                        </button>
-                        <button class="suggestion-card" data-prompt="Как улучшить продуктивность?">
-                            <span class="suggestion-icon">⚡</span>
-                            <span class="suggestion-text">Как улучшить продуктивность?</span>
-                        </button>
-                        <button class="suggestion-card" data-prompt="Расскажи о последних трендах в AI">
-                            <span class="suggestion-icon">🤖</span>
-                            <span class="suggestion-text">Расскажи о последних трендах в AI</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="home-input-container">
-                <div class="home-input-wrapper">
-                    <textarea id="homeMessageInput" placeholder="Спросите что угодно..." rows="1" maxlength="4000"></textarea>
-                    <button class="voice-btn" id="homeVoiceBtn" title="Записать голосом">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
-                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-                            <line x1="12" y1="19" x2="12" y2="23"></line>
-                            <line x1="8" y1="23" x2="16" y2="23"></line>
-                        </svg>
-                    </button>
-                    <button class="send-btn hidden" id="homeSendBtn" disabled>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
-                        </svg>
-                    </button>
-                </div>
-                <div class="input-footer">
-                    <span class="char-count" id="homeCharCount">0 / 4000</span>
-                </div>
-            </div>
-        </main>
+    <div class="backdrop" id="backdrop"></div>
 
-        <main class="chat-container hidden" id="chatContainer"></main>
+    <main class="main">
+      <header class="topbar">
+        <button type="button" class="btn-icon mobile-only" id="btnMenu" title="Меню">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <div class="topbar-title" id="topTitle">Новый разговор</div>
+        <button type="button" class="btn-icon" id="btnNewMobile" title="Новый чат">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+      </header>
 
-        <footer class="input-container hidden" id="inputContainer">
-            <div class="input-wrapper">
-                <textarea id="messageInput" placeholder="Напишите сообщение..." rows="1" maxlength="4000"></textarea>
-                <button class="voice-btn" id="chatVoiceBtn" title="Записать голосом">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
-                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-                        <line x1="12" y1="19" x2="12" y2="23"></line>
-                        <line x1="8" y1="23" x2="16" y2="23"></line>
-                    </svg>
-                </button>
-                <button class="send-btn hidden" id="sendBtn" disabled>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
-                    </svg>
-                </button>
-            </div>
-            <div class="input-footer">
-                <span class="char-count" id="charCount">0 / 4000</span>
-            </div>
-        </footer>
-    </div>
+      <div class="thread" id="thread">
+        <div class="empty" id="emptyState">
+          <svg class="spark large" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
+            <path d="M16 1.5 18.35 13.65 30.5 16 18.35 18.35 16 30.5 13.65 18.35 1.5 16 13.65 13.65Z" />
+          </svg>
+          <h1>ИСКРА</h1>
+          <p>Спроси что угодно — Nemotron 3 Ultra</p>
+          <div class="suggestions" id="suggestions">
+            <button type="button" data-prompt="Объясни квантовую физику простыми словами">Квантовая физика</button>
+            <button type="button" data-prompt="Напиши код сортировки на Python">Код на Python</button>
+            <button type="button" data-prompt="Как повысить продуктивность?">Продуктивность</button>
+            <button type="button" data-prompt="Расскажи о трендах в AI">Тренды AI</button>
+          </div>
+        </div>
+      </div>
 
-    <script src="script.js"></script>
+      <div class="error-bar hidden" id="errorBar"></div>
+
+      <footer class="composer">
+        <div class="composer-box">
+          <textarea id="input" rows="1" placeholder="Напиши сообщение…" maxlength="8000"></textarea>
+          <button type="button" class="send" id="btnSend" disabled title="Отправить">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+          </button>
+          <button type="button" class="send stop hidden" id="btnStop" title="Остановить">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
+          </button>
+        </div>
+        <div class="composer-meta"><span id="charCount">0 / 8000</span></div>
+      </footer>
+    </main>
+  </div>
+  <script src="app.js"></script>
 </body>
 </html>
